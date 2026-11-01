@@ -31,6 +31,9 @@ export interface MoneyRequest {
   updatedAt: string
   version: number
   events: RequestEvent[]
+  decisionBy?: string | null
+  decisionNote?: string | null
+  decidedAt?: string | null
 }
 
 export interface CreateRequestInput {
