@@ -128,7 +128,7 @@ function Sidebar({ open, close }: { open: boolean; close: () => void }) {
 
   return (
     <>
-      <div className={`sidebar-backdrop ${open ? 'visible' : ''}`} onClick={close} />
+      {open && <div className="sidebar-backdrop visible" onClick={close} />}
       <aside className={`sidebar ${open ? 'open' : ''}`}>
         <div className="brand">
           <div className="brand-mark">S</div>
