@@ -808,12 +808,19 @@ function RequestDetails() {
     setEditSaving(true)
     setEditError('')
     try {
-      const updated = await api.updateRequest(request.id, {
-        amount: editForm.amount,
-        payee: editForm.payee,
-        purpose: editForm.purpose,
-        expiresAt: editForm.expiresAt ? new Date(editForm.expiresAt).toISOString() : undefined,
-      })
+      const patchData: { amount?: number; payee?: string; purpose?: string; expiresAt?: string } = {}
+      if (editForm.amount && editForm.amount !== request.amount) patchData.amount = editForm.amount
+      if (editForm.payee.trim() && editForm.payee.trim() !== request.payee) patchData.payee = editForm.payee.trim()
+      if (editForm.purpose.trim() && editForm.purpose.trim() !== request.purpose) patchData.purpose = editForm.purpose.trim()
+      const origExpiryShort = request.expiresAt ? request.expiresAt.slice(0, 16) : ''
+      if (editForm.expiresAt && editForm.expiresAt !== origExpiryShort) {
+        patchData.expiresAt = new Date(editForm.expiresAt).toISOString()
+      }
+      if (Object.keys(patchData).length === 0) {
+        setEditOpen(false)
+        return
+      }
+      const updated = await api.updateRequest(request.id, patchData)
       setRequest(updated)
       setEditOpen(false)
     } catch (err) {
